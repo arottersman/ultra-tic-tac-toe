@@ -1,0 +1,24 @@
+version: '3'
+services:
+    redis:
+        image: "redis:4.0.8-alpine"
+        ports:
+            - "6379:6379"
+    test-redis:
+        image: "redis:4.0.8-alpine"
+        ports:
+            - "6379:6379"
+    api:
+        build: .
+        ports:
+            - "5000:5000"
+        volumes:
+            - ./src/app:/usr/src/app
+        working_dir: /usr/src/app
+        command: "flask run --host=0.0.0.0"
+        links:
+            - "redis"
+        environment:
+            - FLASK_APP=/usr/src/app/ultra_tic_tac_toe.py
+            - REDIS_URL=redis
+            - REDIS_PORT=6379
